@@ -1,0 +1,49 @@
+spring:
+  application.name: cloud-event-streams
+  kafka: # Required for KafkaTemplate and KafkaListener
+    producer:
+      value-serializer: io.cloudevents.kafka.CloudEventSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      value-deserializer: io.cloudevents.kafka.CloudEventDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  cloud:
+    function:
+      definition: processEventStream;processEvent
+    stream:
+      bindings:
+        #supplyEvent-out-0:
+        #  destination: "internal.cloudevents.ingest"
+        #  producer:
+        #    use-native-encoding: true
+        processEventStream-in-0:
+          destination: "internal.cloudevents.stream.ingest"
+          group: processEventStream
+          consumer:
+            use-native-decoding: true
+        processEventStream-out-0:
+          destination: "internal.cloudevents.transformed.stream.ingest"
+          producer:
+            use-native-encoding: true
+        processEvent-in-0:
+          destination: "internal.cloudevents.ingest"
+          group: processEvent
+          consumer:
+            use-native-decoding: true
+        processEvent-out-0:
+          destination: "internal.cloudevents.transformed.ingest"
+          producer:
+            use-native-encoding: true
+      kafka:
+        streams:
+          bindings:
+            processEventStream-in-0:
+              consumer:
+                key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value-serde: de.pincservices.cloudevents.streams.config.CloudEventSerde
+            processEventStream-out-0:
+              producer:
+                key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value-serde: de.pincservices.cloudevents.streams.config.CloudEventSerde
+                configuration:
+                  commit.interval.ms: 100
