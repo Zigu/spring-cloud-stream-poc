@@ -21,6 +21,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.KafkaContainer;
@@ -33,6 +34,7 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 
 @Testcontainers
 @SpringBootTest
+@ActiveProfiles("test")
 public class CloudEventApplicationTests {
 
     @Container
@@ -70,7 +72,7 @@ public class CloudEventApplicationTests {
         CloudEvent event = CloudEventBuilder.v1()
                 .withId(UUID.randomUUID().toString())
                 .withSource(URI.create("http://localhost/junitTest"))
-                .withType("producer.example")
+                .withType("text")
                 .withData("plain/text", "TestText".getBytes(StandardCharsets.UTF_8))
                 .build();
 
@@ -79,7 +81,7 @@ public class CloudEventApplicationTests {
         Awaitility.await().atMost(20, TimeUnit.SECONDS)
                 .untilAsserted(() -> assertThat(cloudEvents).hasSize(1));
 
-        assertThat(cloudEvents.getFirst().getType()).isEqualTo("process.example");
+        assertThat(cloudEvents.getFirst().getSource()).isEqualTo(URI.create("http://localhost/processEvent"));
     }
 
     @KafkaListener(topics = "internal.cloudevents.transformed.ingest", groupId = "junit")

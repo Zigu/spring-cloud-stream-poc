@@ -7,22 +7,23 @@ spring:
     consumer:
       value-deserializer: io.cloudevents.kafka.CloudEventDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    bootstrap-servers: localhost:9092
   cloud:
     function:
-      definition: processEventStream;processEvent
+      definition: supplyEvent;processEventStream;processEvent;consumeEvent
     stream:
       bindings:
-        #supplyEvent-out-0:
-        #  destination: "internal.cloudevents.ingest"
-        #  producer:
-        #    use-native-encoding: true
+        supplyEvent-out-0:
+          destination: "internal.cloudevents.ingest"
+          producer:
+            use-native-encoding: true
         processEventStream-in-0:
-          destination: "internal.cloudevents.stream.ingest"
+          destination: "internal.cloudevents.ingest"
           group: processEventStream
           consumer:
             use-native-decoding: true
         processEventStream-out-0:
-          destination: "internal.cloudevents.transformed.stream.ingest"
+          destination: "internal.cloudevents.transformed.ingest"
           producer:
             use-native-encoding: true
         processEvent-in-0:
@@ -34,6 +35,11 @@ spring:
           destination: "internal.cloudevents.transformed.ingest"
           producer:
             use-native-encoding: true
+        consumeEvent-in-0:
+          destination: "internal.cloudevents.transformed.ingest"
+          group: consumeEvent
+          consumer:
+            use-native-decoding: true
       kafka:
         streams:
           bindings:

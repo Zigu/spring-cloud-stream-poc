@@ -40,3 +40,15 @@ your production code, don't activate this library.
 (i.e. has much more convenience features) feel free to use this library, but don't forget to disable the testcontainer libraries. 
 - kafka-streams-test-utils: If you do not want to use KafkaListener or KafkaTemplate, use this library to create Streams with the 
 TestTopologyDriver.
+
+## Local running via IDE
+
+To let the application run locally, start a kafka via terminal command
+
+```
+docker-compose up -d
+```
+
+This also starts an akhq instance, available at http://localhost:7080 to view the messages and consumer groups.
+
+Then start the application via run configuration.

@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    function:
+      definition: processEventStream;processEvent
+    stream:
+      bindings:
+        processEventStream-in-0:
+          destination: "internal.cloudevents.stream.ingest"
+          group: processEventStream
+          consumer:
+            use-native-decoding: true
+        processEventStream-out-0:
+          destination: "internal.cloudevents.transformed.stream.ingest"
+          producer:
+            use-native-encoding: true
+        processEvent-in-0:
+          destination: "internal.cloudevents.ingest"
+          group: processEvent
+          consumer:
+            use-native-decoding: true
+        processEvent-out-0:
+          destination: "internal.cloudevents.transformed.ingest"
+          producer:
+            use-native-encoding: true

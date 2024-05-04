@@ -7,8 +7,8 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import de.pincservices.cloudevents.streams.service.Converter;
 import io.cloudevents.CloudEvent;
-import io.cloudevents.core.builder.CloudEventBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -16,17 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 public class StreamFunctions {
 
     @Bean
-    public Function<KStream<String, CloudEvent>, KStream<String, CloudEvent>> processEventStream() {
+    public Function<KStream<String, CloudEvent>, KStream<String, CloudEvent>> processEventStream(Converter converter) {
         return stream -> stream.mapValues(value -> {
             log.info("Process Cloud Event Stream: {}", value);
-            return CloudEventBuilder.v1()
-                    .withData(value.getData())
-                    .withId(value.getId())
-                    .withSource(URI.create("http://localhost/processEventStream"))
-                    .withType("process.stream.example")
-                    .build();
+
+            return converter.convertStreamEvent(value, URI.create("http://localhost/processEventStream"));
         });
     }
-
 
 }
