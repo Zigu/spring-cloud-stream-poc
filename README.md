@@ -1,3 +1,5 @@
+(https://github.com/Zigu/spring-cloud-stream-poc/actions/workflows/gradle.yml/badge.svg)
+
 # POC project for Spring Cloud Stream with Kafka
 
 This project contains test classes to get familiar with
