@@ -1,4 +1,4 @@
-(https://github.com/Zigu/spring-cloud-stream-poc/actions/workflows/gradle.yml/badge.svg)
+![build workflow](https://github.com/Zigu/spring-cloud-stream-poc/actions/workflows/gradle.yml/badge.svg)
 
 # POC project for Spring Cloud Stream with Kafka
 
